@@ -1,6 +1,10 @@
 # Inventory Allocation System
 
-A robust inventory management system designed to handle concurrent order processing with strict stock validation.
+## 📌 Demo Task 2
+
+This project is built as part of **DEMO TASK 2 – Inventory Allocation System**.  
+The goal of this task is to demonstrate **backend orchestration, API discipline, clean architecture, and concurrency-safe logic**.
+
 
 ## 🚀 Tech Stack
 
