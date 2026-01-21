@@ -4,36 +4,42 @@ const orderRepository = require('../repositories/OrderRepository');
 
 class OrderService {
     async createOrder(productId, quantity) {
-        const t = await sequelize.transaction();
+        const transaction = await sequelize.transaction();
 
         try {
-            // 1. Fetch Product with Lock
-            const product = await productRepository.findById(productId, t);
-
+            // 1. Ensure product exists (no stock logic here)
+            const product = await productRepository.findById(productId, transaction);
             if (!product) {
                 throw new Error('Product not found');
             }
 
-            // 2. Validate Stock
-            if (product.stock < quantity) {
+            // 2. Atomically deduct stock (DB-level safety)
+            const affectedRows =
+                await productRepository.deductStockIfAvailable(
+                    productId,
+                    quantity,
+                    transaction
+                );
+
+            if (affectedRows === 0) {
                 throw new Error('Insufficient stock');
             }
 
-            // 3. Deduct Stock
-            await productRepository.updateStock(product, quantity, t);
+            // 3. Create order after stock deduction succeeds
+            const order = await orderRepository.create(
+                {
+                    productId,
+                    quantity,
+                    status: 'confirmed'
+                },
+                transaction
+            );
 
-            // 4. Create Order
-            const order = await orderRepository.create({
-                productId,
-                quantity,
-                status: 'confirmed'
-            }, t);
-
-            await t.commit();
+            await transaction.commit();
             return order;
 
         } catch (error) {
-            await t.rollback();
+            await transaction.rollback();
             throw error;
         }
     }

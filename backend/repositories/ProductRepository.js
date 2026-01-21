@@ -1,13 +1,28 @@
 const Product = require('../models/Product');
+const { Op } = require('sequelize');
 
 class ProductRepository {
-    async findById(id, transaction) {
-        return await Product.findByPk(id, { transaction, lock: transaction.LOCK.UPDATE });
+
+    // Atomic stock deduction (SAFE for concurrency)
+    async deductStockIfAvailable(productId, quantity, transaction) {
+        const [affectedRows] = await Product.update(
+            {
+                stock: Product.sequelize.literal(`stock - ${quantity}`)
+            },
+            {
+                where: {
+                    id: productId,
+                    stock: { [Op.gte]: quantity }
+                },
+                transaction
+            }
+        );
+
+        return affectedRows; // 1 = success, 0 = insufficient stock
     }
 
-    async updateStock(product, quantity, transaction) {
-        product.stock -= quantity;
-        return await product.save({ transaction });
+    async findById(id, transaction) {
+        return await Product.findByPk(id, { transaction });
     }
 }
 
