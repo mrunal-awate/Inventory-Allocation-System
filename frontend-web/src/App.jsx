@@ -6,7 +6,7 @@ function App() {
     const [productId, setProductId] = useState('')
     const [quantity, setQuantity] = useState('')
     const [message, setMessage] = useState('')
-    const [status, setStatus] = useState('') // success, error, loading
+    const [status, setStatus] = useState('') 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
