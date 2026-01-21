@@ -18,7 +18,6 @@ The goal of this task is to demonstrate **backend orchestration, API discipline,
 ```
 /backend          # Node.js Express API
 /frontend-web     # React Web App
-/frontend-mobile  # Flutter Mobile App
 ```
 
 ## ✨ Features
