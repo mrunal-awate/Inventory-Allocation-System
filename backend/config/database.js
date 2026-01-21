@@ -8,9 +8,9 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: 'postgres',
-    logging: false, // Set to console.log to see SQL queries
+    logging: false, 
     pool: {
-      max: 20, // Support concurrent requests
+      max: 20, 
       min: 0,
       acquire: 30000,
       idle: 10000
