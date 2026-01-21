@@ -29,7 +29,7 @@ const Order = sequelize.define('Order', {
     }
 });
 
-// Define Association
+
 Order.belongsTo(Product, { foreignKey: 'productId' });
 Product.hasMany(Order, { foreignKey: 'productId' });
 
