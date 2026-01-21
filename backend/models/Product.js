@@ -19,7 +19,7 @@ const Product = sequelize.define('Product', {
         }
     }
 }, {
-    timestamps: false // Simplified for this task
+    timestamps: false 
 });
 
 module.exports = Product;
