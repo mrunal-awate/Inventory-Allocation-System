@@ -3,7 +3,6 @@ const { Op } = require('sequelize');
 
 class ProductRepository {
 
-    // Atomic stock deduction (SAFE for concurrency)
     async deductStockIfAvailable(productId, quantity, transaction) {
         const [affectedRows] = await Product.update(
             {
@@ -18,7 +17,7 @@ class ProductRepository {
             }
         );
 
-        return affectedRows; // 1 = success, 0 = insufficient stock
+        return affectedRows; 
     }
 
     async findById(id, transaction) {

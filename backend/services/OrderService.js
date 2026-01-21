@@ -7,13 +7,13 @@ class OrderService {
         const transaction = await sequelize.transaction();
 
         try {
-            // 1. Ensure product exists (no stock logic here)
+            
             const product = await productRepository.findById(productId, transaction);
             if (!product) {
                 throw new Error('Product not found');
             }
 
-            // 2. Atomically deduct stock (DB-level safety)
+            
             const affectedRows =
                 await productRepository.deductStockIfAvailable(
                     productId,
@@ -25,7 +25,7 @@ class OrderService {
                 throw new Error('Insufficient stock');
             }
 
-            // 3. Create order after stock deduction succeeds
+            
             const order = await orderRepository.create(
                 {
                     productId,
